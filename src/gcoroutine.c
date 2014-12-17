@@ -29,7 +29,7 @@
 #include "gcoroutineprivate.h"
 
 /**
- * SECTION:coroutines
+ * SECTION:gcoroutine
  * @title: Coroutines
  * @short_description: portable support for coroutines
  * @see_also: #GThread
