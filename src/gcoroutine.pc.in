@@ -8,4 +8,4 @@ Description: GLib coroutine library
 Version: @VERSION@
 Libs: -L${libdir} -lgcoroutine-1.0
 Cflags: -I${includedir}/gcoroutine-1.0
-Requires.private: glib-2.0
+Requires: glib-2.0
