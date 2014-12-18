@@ -9,6 +9,7 @@ AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux])
 
 AM_INIT_AUTOMAKE([1.11 no-define foreign -Wno-portability dist-xz no-dist-gzip tar-ustar])
+AM_EXTRA_RECURSIVE_TARGETS([memcheck])
 
 AM_SILENT_RULES([yes])
 
