@@ -19,3 +19,5 @@ before_install:
 
 script:
   - ./autogen.sh --prefix=/usr && make all && make distcheck
+  - make clean
+  - ./configure --with-coroutine=gthread && make all && make distcheck
