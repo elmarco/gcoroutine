@@ -21,6 +21,12 @@
  */
 
 #include "config.h"
+
+/* XXX Is there a nicer way to disable glibc's stack check for longjmp? */
+#ifdef _FORTIFY_SOURCE
+#undef _FORTIFY_SOURCE
+#endif
+
 #include "gcoroutineprivate.h"
 #include "valgrind.h"
 
