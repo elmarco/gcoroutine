@@ -14,10 +14,11 @@ compiler:
 before_install:
   - sudo add-apt-repository -y "deb http://archive.ubuntu.com/ubuntu/ trusty main universe"
   - sudo apt-get update -qq
-  - sudo apt-get install automake autoconf intltool libglib2.0-dev gtk-doc-tools pkg-config
+  - sudo apt-get install automake autoconf intltool libglib2.0-dev gtk-doc-tools pkg-config valgrind
 
 
 script:
   - ./autogen.sh --prefix=/usr && make all && make distcheck
+  - make memcheck
   - make clean
   - ./configure --with-coroutine=gthread && make all && make distcheck
