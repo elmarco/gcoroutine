@@ -1,0 +1,21 @@
+notifications:
+  irc:
+    channels:
+      - "irc.gimp.net#spice"
+    skip_join: true
+    use_notice: true
+    template:
+      - "%{message} (%{branch} - %{commit} : %{author}): %{build_url}"
+language: c
+compiler:
+  - gcc
+  - clang
+
+before_install:
+  - sudo add-apt-repository -y "deb http://archive.ubuntu.com/ubuntu/ trusty main universe"
+  - sudo apt-get update -qq
+  - sudo apt-get install automake autoconf intltool libglib2.0-dev gtk-doc-tools pkg-config
+
+
+script:
+  - ./autogen.sh --prefix=/usr && make all && make distcheck
