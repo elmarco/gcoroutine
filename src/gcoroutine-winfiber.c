@@ -66,13 +66,13 @@ coroutine_trampoline (void *co_)
 GCoroutine *
 _g_coroutine_new (void)
 {
-    const size_t stack_size = 1 << 20;
-    GRealCoroutine *co;
+  const size_t stack_size = 1 << 20;
+  GRealCoroutine *co;
 
-    co = g_slice_new0 (GRealCoroutine);
-    co->fiber = CreateFiber (stack_size, coroutine_trampoline, co);
+  co = g_slice_new0 (GRealCoroutine);
+  co->fiber = CreateFiber (stack_size, coroutine_trampoline, co);
 
-    return (GCoroutine*)co;
+  return (GCoroutine*)co;
 }
 
 void
