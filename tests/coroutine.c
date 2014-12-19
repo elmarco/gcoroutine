@@ -172,10 +172,15 @@ test_unfinished (void)
 
   coroutine = g_coroutine_new (yield_5_times);
   g_coroutine_resume (coroutine, &done);
-  g_test_expect_message(G_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
-                        "*coroutine has not completed*");
+  g_test_expect_message (G_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
+                         "*coroutine has not completed*");
   g_coroutine_unref (coroutine);
-  g_test_assert_expected_messages();
+  g_test_assert_expected_messages ();
+
+  while (!done)
+    {
+      g_coroutine_resume (coroutine, &done);
+    }
 }
 
 /*

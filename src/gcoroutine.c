@@ -115,6 +115,12 @@ coroutine_swap (GCoroutine *from, GCoroutine *to, gpointer data)
   case GCOROUTINE_TERMINATE:
     data = to->data;
     to->caller = to; /* point to himself, terminated state */
+    if (g_atomic_int_get (&to->ref_count) <= 0)
+      {
+        /* freeing zombie coroutine */
+        g_warn_if_fail (g_queue_is_empty (&to->resume_queue));
+       _g_coroutine_free (to);
+      }
     return data;
   default:
     abort ();
