@@ -1,0 +1,6 @@
+- port qemu (wip)
+- port spice-gtk
+- port gtk-vnc
+- review API documentation
+- add sigaltstack support
+
