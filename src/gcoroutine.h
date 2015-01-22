@@ -1,7 +1,12 @@
 /*
- * Copyright (C) 2006  Anthony Liguori <anthony@codemonkey.ws>
+ * GLib coroutines (adapted from QEMU coroutines)
+ *
  * Copyright IBM, Corp. 2011
- * Copyright (C) 2011-2013 Red Hat, Inc.
+ * Copyright (C) 2011-2014 Red Hat, Inc.
+ *
+ * Authors:
+ *  Stefan Hajnoczi    <stefanha@linux.vnet.ibm.com>
+ *  Kevin Wolf         <kwolf@redhat.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,7 +22,6 @@
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
- *
  */
 
 #ifndef __G_COROUTINE_H__
