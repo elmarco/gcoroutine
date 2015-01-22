@@ -58,6 +58,7 @@ coroutine_trampoline (void *co_)
 
   while (1)
     {
+      g_coroutine_ref (co);
       co->data = co->func (co->data);
       _g_coroutine_switch (co, co->caller, GCOROUTINE_TERMINATE);
     }

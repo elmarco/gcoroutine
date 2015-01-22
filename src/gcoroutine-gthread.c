@@ -93,9 +93,11 @@ static gpointer
 coroutine_thread (gpointer opaque)
 {
     GRealCoroutine *co = opaque;
+    GCoroutine *coro = opaque;
 
     set_coroutine_key (co, FALSE);
     coroutine_wait_runnable (co);
+    g_coroutine_ref (coro);
     co->base.data = co->base.func (co->base.data);
     _g_coroutine_switch (&co->base, co->base.caller, GCOROUTINE_TERMINATE);
 

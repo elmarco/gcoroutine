@@ -164,25 +164,6 @@ test_yield (void)
   g_coroutine_unref (coroutine);
 }
 
-static void
-test_unfinished (void)
-{
-  GCoroutine *coroutine;
-  gboolean done = FALSE;
-
-  coroutine = g_coroutine_new (yield_5_times);
-  g_coroutine_resume (coroutine, &done);
-  g_test_expect_message (G_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
-                         "*coroutine has not completed*");
-  g_coroutine_unref (coroutine);
-  g_test_assert_expected_messages ();
-
-  while (!done)
-    {
-      g_coroutine_resume (coroutine, &done);
-    }
-}
-
 /*
  * Check that creation, enter, and return work
  */
@@ -217,6 +198,36 @@ test_lifecycle (void)
   g_assert (ret == NULL);
   g_coroutine_unref (coroutine);
   g_assert (done); /* expect done to be true (second time) */
+}
+
+static gpointer
+yield_done (gpointer data) G_COROUTINE_FUNC
+{
+    gboolean *done = data;
+
+    g_coroutine_yield (NULL);
+
+    *done = TRUE;
+}
+
+static void
+test_unref (void)
+{
+    GCoroutine *coroutine;
+    gboolean done = FALSE;
+
+    /* checks no leaking in simple case */
+    coroutine = g_coroutine_new (yield_5_times);
+    g_coroutine_unref (coroutine);
+
+    /* checks if resume takes an implicit ref */
+    coroutine = g_coroutine_new (yield_done);
+    g_coroutine_resume (coroutine, &done);
+    g_assert (!done);
+    g_coroutine_unref (coroutine);
+
+    g_coroutine_resume (coroutine, NULL);
+    g_assert (done);
 }
 
 /*
@@ -488,8 +499,8 @@ main (int argc, char **argv)
   g_test_init (&argc, &argv, NULL);
 
   g_test_add_func ("/basic/lifecycle", test_lifecycle);
+  g_test_add_func ("/basic/unref", test_unref);
   g_test_add_func ("/basic/yield", test_yield);
-  g_test_add_func ("/basic/unfinished", test_unfinished);
   g_test_add_func ("/basic/nesting", test_nesting);
   g_test_add_func ("/basic/self", test_self);
   g_test_add_func ("/basic/in_coroutine", test_in_coroutine);

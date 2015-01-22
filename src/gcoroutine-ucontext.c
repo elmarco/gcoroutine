@@ -123,6 +123,7 @@ coroutine_trampoline (int i0, int i1)
 
   while (1)
     {
+      g_coroutine_ref (co);
       co->data = co->func (co->data);
       _g_coroutine_switch (co, co->caller, GCOROUTINE_TERMINATE);
     }

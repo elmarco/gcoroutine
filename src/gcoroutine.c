@@ -114,13 +114,7 @@ coroutine_swap (GCoroutine *from, GCoroutine *to, gpointer data)
     return from->data;
   case GCOROUTINE_TERMINATE:
     data = to->data;
-    to->caller = to; /* point to himself, terminated state */
-    if (g_atomic_int_get (&to->ref_count) <= 0)
-      {
-        /* freeing zombie coroutine */
-        g_warn_if_fail (g_queue_is_empty (&to->resume_queue));
-       _g_coroutine_free (to);
-      }
+    g_coroutine_unref (to);
     return data;
   default:
     abort ();
@@ -132,14 +126,13 @@ coroutine_swap (GCoroutine *from, GCoroutine *to, gpointer data)
  * @func: a function to execute in the new coroutine
  *
  * This function creates a new coroutine. After calling
- * g_coroutine_resume(), the coroutine will run until @func returns or
+ * g_coroutine_resume(). the coroutine will run until @func returns or
  * until g_coroutine_yield() is called.
  *
  * If the coroutine can not be created the program aborts.
  *
  * To free the struct returned by this function, use
- * g_coroutine_unref(). Note that dropping the last reference of an
- * unterminated coroutine is a programming error.
+ * g_coroutine_unref().
  *
  * Returns: the new #GCoroutine
  **/
@@ -191,12 +184,6 @@ g_coroutine_unref (GCoroutine *co)
 
   if (g_atomic_int_dec_and_test (&co->ref_count))
     {
-      if (co->caller != co)
-        {
-          g_critical ("the coroutine has not completed and cannot be freed");
-          return;
-        }
-
       g_warn_if_fail (g_queue_is_empty (&co->resume_queue));
       _g_coroutine_free (co);
     }
@@ -228,6 +215,10 @@ g_coroutine_resumable (GCoroutine *co)
  * Enter and resume the context of execution of @coroutine. The
  * coroutine will execute until it returns or yields with
  * g_coroutine_yield().
+ *
+ * An implicit reference is taken when entering the @coroutine for the
+ * first time. This reference is dropped when the coroutine function
+ * returns.
  *
  * Returns: the argument returned by the coroutine
  **/
