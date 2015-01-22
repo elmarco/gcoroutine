@@ -176,6 +176,10 @@ g_coroutine_ref (GCoroutine *co)
  * Decrease the reference count on coroutine, possibly freeing all
  * resources associated with it.
  *
+ * Note that each coroutine holds a reference to its GCoroutine while
+ * it is running, so it is safe to drop your own reference to it if
+ * you don't need it anymore.
+ *
  **/
 void
 g_coroutine_unref (GCoroutine *co)
