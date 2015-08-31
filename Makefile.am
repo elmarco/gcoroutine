@@ -32,7 +32,7 @@ gen-ChangeLog:
 	@if test -d "$(srcdir)/.git"; then \
 	  echo Generating ChangeLog... ; \
 	  ( cd "$(srcdir)" \
-	    && $(top_srcdir)/build/missing --run git log --stat ) > ChangeLog.tmp \
+	    && $(top_srcdir)/build-aux/missing --run git log --stat ) > ChangeLog.tmp \
 	  && mv -f ChangeLog.tmp $(top_distdir)/ChangeLog \
 	  || ( rm -f ChangeLog.tmp; \
 	       echo Failed to generate ChangeLog >&2 ); \
